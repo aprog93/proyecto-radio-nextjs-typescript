@@ -20,15 +20,21 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [whoWeAreOpen, setWhoWeAreOpen] = useState(false);
+  const [contentOpen, setContentOpen] = useState(false);
 
   const mainLinks = [
     { to: "/", label: t("nav.home") },
     { to: "/now-playing", label: t("nav.nowPlaying") },
-    { to: "/programas", label: t("nav.programs") },
-    { to: "/programacion", label: t("nav.schedule") },
     { to: "/event", label: t("nav.events") },
     { to: "/shop", label: t("nav.shop") },
     { to: "/blog", label: t("nav.blog") },
+  ];
+
+  const contentLinks = [
+    { to: "/programacion", label: "Programación", icon: "📅" },
+    { to: "/podcasts", label: "Podcasts", icon: "🎙️" },
+    { to: "/ondemand", label: "On Demand", icon: "🎵" },
+    { to: "/programas", label: "Programas", icon: "📻" },
   ];
 
   const whoWeAreLinks = [
@@ -60,6 +66,40 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
+
+          {/* Dropdown: Contenido */}
+          <div className="relative">
+            <button 
+              onClick={() => setContentOpen(!contentOpen)} 
+              onBlur={() => setTimeout(() => setContentOpen(false), 200)} 
+              className={`flex items-center gap-1 px-2.5 py-2 rounded-md text-sm font-medium transition-colors ${contentLinks.some((l) => isActive(l.to)) ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
+            >
+              Contenido
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${contentOpen ? "rotate-180" : ""}`} />
+            </button>
+            <AnimatePresence>
+              {contentOpen && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -8 }} 
+                  animate={{ opacity: 1, y: 0 }} 
+                  exit={{ opacity: 0, y: -8 }} 
+                  className="absolute left-0 mt-1 glass rounded-lg overflow-hidden min-w-[180px] shadow-lg"
+                >
+                  {contentLinks.map((link) => (
+                    <Link 
+                      key={link.to} 
+                      to={link.to} 
+                      onClick={() => setContentOpen(false)} 
+                      className={`flex items-center gap-2 px-4 py-2.5 text-sm transition-colors ${isActive(link.to) ? "text-primary bg-primary/10" : "text-foreground hover:bg-secondary"}`}
+                    >
+                      <span className="w-5 text-center">{link.icon}</span>
+                      {link.label}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           <div className="relative">
             <button onClick={() => setWhoWeAreOpen(!whoWeAreOpen)} onBlur={() => setTimeout(() => setWhoWeAreOpen(false), 200)} className={`flex items-center gap-1 px-2.5 py-2 rounded-md text-sm font-medium transition-colors ${whoWeAreLinks.some((l) => isActive(l.to)) ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-secondary"}`}>
@@ -132,6 +172,15 @@ const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
+              
+              {/* Mobile: Contenido dropdown */}
+              <div className="pl-3 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Contenido</div>
+              {contentLinks.map((link) => (
+                <Link key={link.to} to={link.to} onClick={() => setMobileOpen(false)} className={`block px-3 py-2 pl-6 rounded-md text-sm font-medium transition-colors ${isActive(link.to) ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-secondary"}`}>
+                  {link.icon} {link.label}
+                </Link>
+              ))}
+              
               <div className="pl-3 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t("nav.whoWeAre")}</div>
               {whoWeAreLinks.map((link) => (
                 <Link key={link.to} to={link.to} onClick={() => setMobileOpen(false)} className={`block px-3 py-2 pl-6 rounded-md text-sm font-medium transition-colors ${isActive(link.to) ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-secondary"}`}>

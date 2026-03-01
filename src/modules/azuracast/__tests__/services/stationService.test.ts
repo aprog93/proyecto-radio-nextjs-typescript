@@ -5,11 +5,15 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { stationService } from '@/modules/azuracast/services/stationService';
-import * as client from '@/modules/azuracast/api/client';
 
-vi.mock('@/modules/azuracast/api/client');
+// Mock the backend-api module
+vi.mock('@/lib/backend-api', () => ({
+  apiCall: vi.fn(),
+}));
 
-const mockApiCall = client.apiCall as any;
+import { apiCall } from '@/lib/backend-api';
+
+const mockApiCall = apiCall as ReturnType<typeof vi.fn>;
 
 describe('stationService', () => {
   beforeEach(() => {
@@ -110,7 +114,7 @@ describe('stationService', () => {
       const result = await stationService.getNowPlaying(1);
 
       expect(result).toEqual(mockNowPlaying);
-      expect(mockApiCall).toHaveBeenCalledWith('/nowplaying/1');
+      expect(mockApiCall).toHaveBeenCalledWith('/station/now-playing');
     });
 
     it('should return null on error', async () => {

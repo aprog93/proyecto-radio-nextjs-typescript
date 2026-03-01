@@ -177,8 +177,6 @@ export function createMockAzuracastClient() {
       listeners: { current: 10 },
       live: { is_live: true },
     }),
-    getPlaylists: vi.fn().mockResolvedValue([]),
-    getPlaylistSongs: vi.fn().mockResolvedValue([]),
   };
 }
 

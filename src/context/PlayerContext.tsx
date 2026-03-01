@@ -1,5 +1,11 @@
 import React, { createContext, useContext, useState, useRef, useCallback, useEffect } from 'react';
-import { fetchNowPlaying, POLLING_INTERVAL, type AzuraNowPlayingResponse, type AzuraSongHistory, type AzuraPlayingNext } from '@/lib/azuracast';
+import { 
+  fetchNowPlayingFromBackend, 
+  POLLING_INTERVAL, 
+  type AzuraNowPlayingResponse, 
+  type AzuraSongHistory, 
+  type AzuraPlayingNext 
+} from '@/lib/azuracast';
 
 interface NowPlaying {
   title: string;
@@ -52,13 +58,14 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [streamUrl, setStreamUrl] = useState("");
   const audioRef = useRef<HTMLAudioElement>(null!);
 
-  // Poll AzuraCast API
+  // Poll backend API for now playing data
   useEffect(() => {
     let active = true;
 
     const update = async () => {
       try {
-        const data: AzuraNowPlayingResponse = await fetchNowPlaying();
+        // Use backend BFF (more reliable, cached)
+        const data: AzuraNowPlayingResponse = await fetchNowPlayingFromBackend();
         if (!active) return;
 
         setNowPlaying({
@@ -83,7 +90,8 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           });
         }
       } catch (err) {
-        console.error("Failed to fetch AzuraCast data:", err);
+        console.error("Failed to fetch now playing from backend, using fallback:", err);
+        // Fallback: Could try direct AzuraCast API here if needed
       }
     };
 

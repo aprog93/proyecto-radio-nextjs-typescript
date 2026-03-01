@@ -7,6 +7,14 @@ import { useApi } from "@/hooks/use-api";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 
+/**
+ * Cart item structure
+ */
+interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
 const ProductDetail = () => {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
@@ -40,7 +48,7 @@ const ProductDetail = () => {
     const cart = cartJson ? JSON.parse(cartJson) : [];
 
     // Add or update product in cart
-    const existingItem = cart.find((item: any) => item.product.id === product!.id);
+    const existingItem = cart.find((item: CartItem) => item.product.id === product!.id);
     if (existingItem) {
       existingItem.quantity += quantity;
     } else {

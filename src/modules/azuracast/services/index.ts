@@ -4,7 +4,6 @@
  */
 
 export { stationService } from './stationService';
-export { playlistService } from './playlistService';
 export { historyService } from './historyService';
 
 export type { ApiResponse } from '../api/client';

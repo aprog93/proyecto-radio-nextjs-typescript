@@ -23,15 +23,6 @@ export interface Song {
   duration: number;
 }
 
-export interface Playlist {
-  id: number;
-  name: string;
-  type: string;
-  source: string;
-  isEnabled: boolean;
-  songCount: number;
-}
-
 export interface NowPlaying {
   station: Station;
   nowPlaying: {
@@ -56,13 +47,6 @@ export interface StationInfo {
   listeners: number;
   hlsListeners: number;
   isOnline: boolean;
-}
-
-export interface PlaylistItem {
-  id: number;
-  playlistId: number;
-  song: Song;
-  weight: number;
 }
 
 export interface SongDetails extends Song {

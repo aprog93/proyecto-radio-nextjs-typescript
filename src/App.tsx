@@ -46,6 +46,8 @@ import {
   LazyDashboard,
   LazyNowPlayingPageModule,
   LazyPlaylistsPage,
+  LazyPodcasts,
+  LazyOnDemand,
 } from "@/lib/lazy-routes";
 
 const queryClient = new QueryClient();
@@ -105,6 +107,8 @@ const App = () => (
                   <Route path="/stream-dashboard" element={withSuspense(LazyDashboard)()} />
                   <Route path="/stream-now-playing" element={withSuspense(LazyNowPlayingPageModule)()} />
                   <Route path="/playlists" element={withSuspense(LazyPlaylistsPage)()} />
+                  <Route path="/podcasts" element={withSuspense(LazyPodcasts)()} />
+                  <Route path="/ondemand" element={withSuspense(LazyOnDemand)()} />
                 </Route>
 
                 {/* Not found - eager loaded */}

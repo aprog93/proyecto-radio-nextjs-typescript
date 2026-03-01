@@ -31,7 +31,7 @@ export const useApi = <T,>(
   fetch: () => Promise<void>;
   refetch: () => Promise<void>;
 } => {
-  const { autoFetch = true } = options;
+  const { autoFetch = true, deps = [] } = options;
   const [state, setState] = useState<UseApiState<T>>({
     data: null,
     loading: false,
@@ -39,6 +39,19 @@ export const useApi = <T,>(
   });
 
   const isMountedRef = useRef(true);
+  // Store asyncFn in ref to prevent infinite loops
+  const asyncFnRef = useRef(asyncFn);
+  // Store autoFetch in ref to track changes
+  const autoFetchRef = useRef(autoFetch);
+  
+  // Update refs when they change
+  useEffect(() => {
+    asyncFnRef.current = asyncFn;
+  }, [asyncFn]);
+  
+  useEffect(() => {
+    autoFetchRef.current = autoFetch;
+  }, [autoFetch]);
 
   useEffect(() => {
     return () => {
@@ -51,7 +64,7 @@ export const useApi = <T,>(
 
     setState((prev) => ({ ...prev, loading: true, error: null }));
     try {
-      const result = await asyncFn();
+      const result = await asyncFnRef.current();
       if (isMountedRef.current) {
         setState({ data: result, loading: false, error: null });
       }
@@ -64,18 +77,18 @@ export const useApi = <T,>(
         });
       }
     }
-  }, [asyncFn]);
+  }, []); // Empty deps - fetch is now stable
 
   const refetch = useCallback(async () => {
     await fetch();
   }, [fetch]);
 
-  // Auto-fetch on mount
+  // Auto-fetch on mount or when deps change
   useEffect(() => {
-    if (autoFetch) {
+    if (autoFetchRef.current) {
       fetch();
     }
-  }, [autoFetch, fetch]);
+  }, [autoFetch, ...deps]); // Only re-fetch when autoFetch or deps change
 
   return {
     ...state,

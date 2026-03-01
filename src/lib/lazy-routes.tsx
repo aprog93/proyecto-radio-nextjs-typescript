@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, ComponentType, ReactNode } from 'react';
 import { Loader2 } from 'lucide-react';
 
 /**
@@ -11,15 +11,26 @@ const RouteLoader = () => (
 );
 
 /**
+ * Props for wrapped component
+ */
+interface WrappedComponentProps {
+  children?: ReactNode;
+}
+
+/**
  * Wrapper for lazy-loaded routes with Suspense
  * @param Component The lazy-loaded component
  * @returns JSX with Suspense boundary
  */
-export const withSuspense = (Component: React.ComponentType<any>) => (props: any) => (
-  <Suspense fallback={<RouteLoader />}>
-    <Component {...props} />
-  </Suspense>
-);
+export const withSuspense = <P extends WrappedComponentProps>(
+  Component: ComponentType<P>
+): ((props: P) => JSX.Element) => {
+  return (props: P) => (
+    <Suspense fallback={<RouteLoader />}>
+      <Component {...props} />
+    </Suspense>
+  );
+};
 
 /**
  * Lazy load route components
@@ -66,4 +77,8 @@ export const LazyCart = lazy(() => import('@/pages/Cart'));
 export const LazyDashboard = lazy(() => import('@/modules/azuracast').then(m => ({ default: m.Dashboard })));
 export const LazyNowPlayingPageModule = lazy(() => import('@/modules/azuracast').then(m => ({ default: m.NowPlayingPage })));
 export const LazyPlaylistsPage = lazy(() => import('@/modules/azuracast').then(m => ({ default: m.PlaylistsPage })));
+
+// New pages - Streaming content
+export const LazyPodcasts = lazy(() => import('@/pages/Podcasts'));
+export const LazyOnDemand = lazy(() => import('@/pages/OnDemand'));
 
