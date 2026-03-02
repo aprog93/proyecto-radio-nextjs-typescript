@@ -781,6 +781,48 @@ export const admin = {
         }>("/admin/stats", {}, finalToken);
         return unwrapResponse(response);
     },
+
+    getLiveStats: async (
+        token?: string,
+    ): Promise<{
+        totalUsers: number;
+        activeUsers: number;
+        admins: number;
+        listeners: number;
+        totalBlogs: number;
+        publishedBlogs: number;
+        totalNews: number;
+        publishedNews: number;
+        totalEvents: number;
+        publishedEvents: number;
+        totalProducts: number;
+        publishedProducts: number;
+        totalDonations: { count: number; amount: number };
+        azuracast: {
+            currentListeners: number;
+            totalListeners: number;
+            isOnline: boolean;
+            nowPlaying: {
+                artist: string;
+                title: string;
+                album?: string;
+                art?: string;
+                duration?: number;
+                elapsed?: number;
+            } | null;
+            station: {
+                name: string;
+                description: string;
+                bitrate: number;
+                format: string;
+            };
+        };
+    }> => {
+        const finalToken = token || getStoredToken();
+        if (!finalToken) throw new Error("No token available");
+        const response = await apiCall<any>("/admin/stats/live", {}, finalToken);
+        return unwrapResponse(response);
+    },
 };
 
 // ============================================================================

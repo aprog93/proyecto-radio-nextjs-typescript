@@ -13,12 +13,15 @@ import {
   Activity,
   Plus,
   Loader2,
+  Radio,
+  Music,
+  Volume2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AdminLayout, StatCard } from '@/components/admin';
 import { toast } from 'sonner';
 
-interface StatsData {
+interface LiveStatsData {
   totalUsers: number;
   activeUsers: number;
   admins: number;
@@ -32,13 +35,32 @@ interface StatsData {
   totalProducts: number;
   publishedProducts: number;
   totalDonations: { count: number; amount: number };
+  azuracast: {
+    currentListeners: number;
+    totalListeners: number;
+    isOnline: boolean;
+    nowPlaying: {
+      artist: string;
+      title: string;
+      album?: string;
+      art?: string;
+      duration?: number;
+      elapsed?: number;
+    } | null;
+    station: {
+      name: string;
+      description: string;
+      bitrate: number;
+      format: string;
+    };
+  };
 }
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [stats, setStats] = useState<StatsData | null>(null);
+  const [stats, setStats] = useState<LiveStatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -56,7 +78,7 @@ export default function AdminDashboard() {
       try {
         setLoading(true);
         setError(null);
-        const data = await api.admin.getStats();
+        const data = await api.admin.getLiveStats();
         setStats(data);
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Error desconocido';
@@ -68,8 +90,8 @@ export default function AdminDashboard() {
     };
 
     fetchStats();
-    // Refresh stats every 30 seconds
-    const interval = setInterval(fetchStats, 30000);
+    // Refresh stats every 15 seconds for live data
+    const interval = setInterval(fetchStats, 15000);
     return () => clearInterval(interval);
   }, []);
 
@@ -145,6 +167,83 @@ export default function AdminDashboard() {
             color="red"
             trend={{ direction: 'up', percentage: 8 }}
           />
+        </div>
+      </div>
+
+      {/* Live Streaming Stats from AzuraCast */}
+      <div className="glass rounded-lg p-6 mb-12 border-l-4 border-red-500">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-3 bg-red-500/15 dark:bg-red-500/20 rounded-lg animate-pulse">
+            <Radio size={24} className="text-red-500" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-foreground">Transmisión en Vivo</h2>
+            <p className="text-sm text-muted-foreground">
+              {stats.azuracast.isOnline ? '🟢 En línea' : '🔴 Fuera de línea'}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Station Info */}
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">Estación</p>
+              <p className="text-lg font-semibold text-foreground">{stats.azuracast.station.name}</p>
+              <p className="text-xs text-muted-foreground mt-1">{stats.azuracast.station.description}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">Bitrate</p>
+              <p className="text-lg font-semibold text-foreground">{stats.azuracast.station.bitrate} kbps - {stats.azuracast.station.format}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">Oyentes</p>
+              <p className="text-2xl font-bold text-blue-500">{stats.azuracast.currentListeners}</p>
+              <p className="text-xs text-muted-foreground">Total: {stats.azuracast.totalListeners}</p>
+            </div>
+          </div>
+
+          {/* Now Playing */}
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm text-muted-foreground mb-3 flex items-center gap-2">
+                <Music size={16} />
+                Ahora reproduciendo
+              </p>
+              {stats.azuracast.nowPlaying ? (
+                <div className="bg-accent/30 rounded-lg p-4">
+                  <div className="flex gap-4 items-start">
+                    {/* Album Art - Small */}
+                    {stats.azuracast.nowPlaying.art && (
+                      <img 
+                        src={stats.azuracast.nowPlaying.art} 
+                        alt="Album art"
+                        className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
+                      />
+                    )}
+                    {/* Song Info */}
+                    <div className="flex-1 space-y-2 min-w-0">
+                      <p className="font-semibold text-foreground truncate">{stats.azuracast.nowPlaying.title}</p>
+                      <p className="text-sm text-muted-foreground truncate">{stats.azuracast.nowPlaying.artist}</p>
+                      {stats.azuracast.nowPlaying.album && (
+                        <p className="text-xs text-muted-foreground italic truncate">{stats.azuracast.nowPlaying.album}</p>
+                      )}
+                      {stats.azuracast.nowPlaying.duration && (
+                        <div className="text-xs text-muted-foreground pt-2 border-t border-border">
+                          {stats.azuracast.nowPlaying.elapsed || 0}s / {stats.azuracast.nowPlaying.duration}s
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-accent/30 rounded-lg p-4 text-center py-6">
+                  <Volume2 size={24} className="text-muted-foreground mx-auto mb-2 opacity-50" />
+                  <p className="text-muted-foreground text-sm">Sin información de reproducción</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
