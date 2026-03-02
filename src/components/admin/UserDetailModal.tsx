@@ -84,16 +84,16 @@ const UserDetailModal = ({ user, open, onOpenChange, onRoleUpdate, onDelete }: U
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-3 pt-4 border-t">
-            <Button
-              onClick={handleRoleUpdate}
-              disabled={isUpdating || selectedRole === user.role}
-              className="flex-1 gap-2"
-            >
-              {isUpdating && <Loader2 className="w-4 h-4 animate-spin" />}
-              {t('admin.update_role')}
-            </Button>
+           {/* Actions */}
+           <div className="flex gap-3 pt-4 border-t">
+             <Button
+               onClick={handleRoleUpdate}
+               disabled={isUpdating || selectedRole === user.role}
+               className="flex-1 gap-2 bg-primary hover:bg-accent text-primary-foreground"
+             >
+               {isUpdating && <Loader2 className="w-4 h-4 animate-spin" />}
+               {t('admin.update_role')}
+             </Button>
             <Button
               variant="destructive"
               onClick={() => {

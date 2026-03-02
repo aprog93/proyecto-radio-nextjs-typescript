@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
-import { User, ShoppingBag, Calendar, Heart, Settings, LogOut, Loader2 } from "lucide-react";
+import { User, ShoppingBag, Calendar, Heart, Settings, LogOut, Loader2, Shield } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
@@ -8,10 +8,10 @@ import { api } from "@/lib/api";
 import { useApi } from "@/hooks/use-api";
 
 const portalSections = [
-  { key: "orders", icon: ShoppingBag, to: "#" },
-  { key: "events", icon: Calendar, to: "#" },
-  { key: "favorites", icon: Heart, to: "#" },
-  { key: "settings", icon: Settings, to: "/portal/settings" },
+  { key: "orders", icon: ShoppingBag, to: "/portal/orders", admin: false },
+  { key: "events", icon: Calendar, to: "/portal/events", admin: false },
+  { key: "favorites", icon: Heart, to: "/portal/favorites", admin: false },
+  { key: "settings", icon: Settings, to: "/portal/settings", admin: false },
 ];
 
 const Portal = () => {
@@ -100,6 +100,29 @@ const Portal = () => {
             <div className="p-4 mb-8 rounded-lg bg-destructive/10 border border-destructive/20">
               <p className="text-destructive text-sm">{profileError.message}</p>
             </div>
+          )}
+
+          {/* Admin Panel Button - Only show if user is admin */}
+          {user?.role === "admin" && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+              <Link
+                to="/admin"
+                className="flex items-center gap-3 p-6 rounded-2xl border-2 border-amber-500/50 bg-amber-500/10 hover:border-amber-500 hover:bg-amber-500/20 transition-all group"
+              >
+                <Shield className="w-8 h-8 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform" />
+                <div className="flex-1">
+                  <h3 className="font-display text-lg font-semibold text-amber-600 dark:text-amber-400">
+                    {t("portal.adminPanel") || "Panel de Administración"}
+                  </h3>
+                  <p className="text-sm text-amber-600/70 dark:text-amber-400/70">
+                    {t("portal.adminPanelDesc") || "Gestiona usuarios, contenido y estadísticas del sistema"}
+                  </p>
+                </div>
+                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-amber-600 text-white">
+                  {t("portal.admin") || "Admin"}
+                </span>
+              </Link>
+            </motion.div>
           )}
 
           <div className="grid sm:grid-cols-2 gap-4">

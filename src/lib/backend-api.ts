@@ -55,10 +55,15 @@ export async function apiCall<T>(
       };
     }
 
+    // Handle both response formats:
+    // 1. Wrapped format: { success: true, data: {...} }
+    // 2. Direct format: { success: true, products: [...], events: [...], etc. }
+    const responseData = data.data !== undefined ? data.data : data;
+    
     return {
       success: true,
-      data: data.data,
-      timestamp: data.timestamp,
+      data: responseData as T,
+      timestamp: data.timestamp || new Date().toISOString(),
     };
   } catch (err) {
     const errorMsg = err instanceof Error ? err.message : 'Unknown error';

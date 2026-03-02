@@ -33,6 +33,21 @@ import {
   LazyPortal,
   LazyProfileSettings,
   LazyAdminDashboard,
+  LazyAdminEventsPage,
+  LazyAdminNewsPage,
+  LazyAdminProductsPage,
+  LazyAdminUsersPage,
+  LazyAdminDonationsPage,
+  LazyAdminSettingsPage,
+  LazyAdminCreateEventPage,
+  LazyAdminEditEventPage,
+  LazyAdminCreateNewsPage,
+  LazyAdminEditNewsPage,
+  LazyAdminCreateProductPage,
+  LazyAdminEditProductPage,
+  LazyPortalOrders,
+  LazyPortalEvents,
+  LazyPortalFavorites,
   LazyResetPassword,
   LazyBlog,
   LazyBlogDetail,
@@ -86,11 +101,29 @@ const App = () => (
                   <Route path="/about-us" element={withSuspense(LazyTeam)()} />
                   <Route path="/contactus" element={withSuspense(LazyContact)()} />
 
-                  {/* User pages - lazy loaded */}
-                  <Route path="/portal" element={withSuspense(LazyPortal)()} />
-                  <Route path="/portal/settings" element={withSuspense(LazyProfileSettings)()} />
-                  <Route path="/admin" element={withSuspense(LazyAdminDashboard)()} />
-                  <Route path="/reset-password" element={withSuspense(LazyResetPassword)()} />
+                   {/* User pages - lazy loaded */}
+                   <Route path="/portal" element={withSuspense(LazyPortal)()} />
+                   <Route path="/portal/settings" element={withSuspense(LazyProfileSettings)()} />
+                   <Route path="/portal/orders" element={withSuspense(LazyPortalOrders)()} />
+                   <Route path="/portal/events" element={withSuspense(LazyPortalEvents)()} />
+                   <Route path="/portal/favorites" element={withSuspense(LazyPortalFavorites)()} />
+                   
+                    {/* Admin pages - lazy loaded */}
+                    <Route path="/admin" element={withSuspense(LazyAdminDashboard)()} />
+                    <Route path="/admin/events" element={withSuspense(LazyAdminEventsPage)()} />
+                    <Route path="/admin/events/create" element={withSuspense(LazyAdminCreateEventPage)()} />
+                    <Route path="/admin/events/:id" element={withSuspense(LazyAdminEditEventPage)()} />
+                    <Route path="/admin/news" element={withSuspense(LazyAdminNewsPage)()} />
+                    <Route path="/admin/news/create" element={withSuspense(LazyAdminCreateNewsPage)()} />
+                    <Route path="/admin/news/:id" element={withSuspense(LazyAdminEditNewsPage)()} />
+                    <Route path="/admin/products" element={withSuspense(LazyAdminProductsPage)()} />
+                    <Route path="/admin/products/create" element={withSuspense(LazyAdminCreateProductPage)()} />
+                    <Route path="/admin/products/:id" element={withSuspense(LazyAdminEditProductPage)()} />
+                    <Route path="/admin/users" element={withSuspense(LazyAdminUsersPage)()} />
+                    <Route path="/admin/donations" element={withSuspense(LazyAdminDonationsPage)()} />
+                    <Route path="/admin/settings" element={withSuspense(LazyAdminSettingsPage)()} />
+                   
+                   <Route path="/reset-password" element={withSuspense(LazyResetPassword)()} />
 
                   {/* Content pages - lazy loaded */}
                   <Route path="/event" element={withSuspense(LazyEvents)()} />

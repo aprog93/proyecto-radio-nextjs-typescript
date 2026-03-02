@@ -61,6 +61,25 @@ export const LazyResetPassword = lazy(() => import('@/pages/ResetPassword'));
 export const LazyPortal = lazy(() => import('@/pages/Portal'));
 export const LazyProfileSettings = lazy(() => import('@/pages/ProfileSettings'));
 export const LazyAdminDashboard = lazy(() => import('@/pages/AdminDashboard'));
+export const LazyPortalOrders = lazy(() => import('@/pages/PortalOrders'));
+export const LazyPortalEvents = lazy(() => import('@/pages/PortalEvents'));
+export const LazyPortalFavorites = lazy(() => import('@/pages/PortalFavorites'));
+
+// Admin pages
+export const LazyAdminEventsPage = lazy(() => import('@/pages/AdminEventsPage'));
+export const LazyAdminNewsPage = lazy(() => import('@/pages/AdminNewsPage'));
+export const LazyAdminProductsPage = lazy(() => import('@/pages/AdminProductsPage'));
+export const LazyAdminUsersPage = lazy(() => import('@/pages/AdminUsersPage'));
+export const LazyAdminDonationsPage = lazy(() => import('@/pages/AdminDonationsPage'));
+export const LazyAdminSettingsPage = lazy(() => import('@/pages/AdminSettingsPage'));
+
+// Admin form pages
+export const LazyAdminCreateEventPage = lazy(() => import('@/pages/AdminCreateEventPage'));
+export const LazyAdminEditEventPage = lazy(() => import('@/pages/AdminEditEventPage'));
+export const LazyAdminCreateNewsPage = lazy(() => import('@/pages/AdminCreateNewsPage'));
+export const LazyAdminEditNewsPage = lazy(() => import('@/pages/AdminEditNewsPage'));
+export const LazyAdminCreateProductPage = lazy(() => import('@/pages/AdminCreateProductPage'));
+export const LazyAdminEditProductPage = lazy(() => import('@/pages/AdminEditProductPage'));
 
 // Content detail pages
 export const LazyBlog = lazy(() => import('@/pages/Blog'));

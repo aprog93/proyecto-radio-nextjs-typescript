@@ -1,17 +1,16 @@
 /**
  * Dashboard
- * Main hub showing now-playing, playlists, and quick stats
+ * Main hub showing now-playing and quick stats
  */
 
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { usePlayer } from '@/context/PlayerContext';
-import { useAzuracastStation, useAzuracastPlaylist } from '@/modules/azuracast';
+import { useAzuracastStation } from '@/modules/azuracast';
 import {
   NowPlayingCard,
   StationInfoCard,
-  PlaylistSelector,
   SongListItem,
 } from '@/modules/azuracast/components';
 import { Button } from '@/components/ui/button';

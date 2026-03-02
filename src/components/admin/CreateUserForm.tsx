@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
@@ -18,7 +17,7 @@ const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
     email: '',
     password: '',
     displayName: '',
-    role: 'listener',
+    role: 'admin', // Changed from 'listener' to 'admin'
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,13 +25,6 @@ const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }));
-  };
-
-  const handleRoleChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      role: value,
     }));
   };
 
@@ -119,22 +111,7 @@ const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
         />
       </div>
 
-      <div>
-        <label htmlFor="role" className="text-sm font-medium text-foreground block mb-1">
-          {t('admin.columns.role')}
-        </label>
-        <Select value={formData.role} onValueChange={handleRoleChange} disabled={isLoading}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="admin">{t('admin.role.admin')}</SelectItem>
-            <SelectItem value="listener">{t('admin.role.listener')}</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <Button type="submit" disabled={isLoading} className="w-full gap-2">
+      <Button type="submit" disabled={isLoading} className="w-full gap-2 bg-primary hover:bg-accent text-primary-foreground">
         {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
         {t('admin.create_user')}
       </Button>

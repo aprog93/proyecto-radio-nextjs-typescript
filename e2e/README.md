@@ -1,6 +1,6 @@
 # E2E Testing with Playwright
 
-End-to-end tests for Proyecto Radio Cesar using Playwright.
+End-to-end tests for Radio Comunitaria Cesar using Playwright.
 
 ## Setup
 
@@ -9,8 +9,8 @@ Tests run against the production server: `https://radio-azura.orioncaribe.com/`
 ### Prerequisites
 
 1. **Test Accounts**: Ensure these accounts exist on the production server:
-   - `admin@test.com` (password: `Admin@12345`, role: admin)
-   - `listener@test.com` (password: `Listener@12345`, role: listener)
+    - `admin@test.com` (password: `Admin@12345`, role: admin)
+    - `listener@test.com` (password: `Listener@12345`, role: listener)
 
 2. **Browsers**: Playwright automatically downloads browsers on first run
 
@@ -42,7 +42,9 @@ npx playwright show-report
 ## Test Structure
 
 ### `fixtures.ts`
+
 Shared test data, API endpoints, and helper functions:
+
 - Test user credentials
 - API endpoint definitions
 - Authentication helpers (`loginUser`, `registerUser`, `logoutUser`)
@@ -52,7 +54,9 @@ Shared test data, API endpoints, and helper functions:
 - **All page routes** (ROUTES constant)
 
 ### `public.spec.ts` - **35 tests**
+
 All public pages without authentication:
+
 - Core: Home, Now Playing
 - Auth: Login, Register
 - Schedule: Schedule (EN/ES), Programs
@@ -65,7 +69,9 @@ All public pages without authentication:
 - Accessibility: HTML structure, Lang attribute
 
 ### `user.spec.ts` - **14 tests**
+
 User authentication and profile features:
+
 - Portal page access
 - Profile settings
 - Reset password
@@ -75,7 +81,9 @@ User authentication and profile features:
 - Mobile user experience
 
 ### `admin-full.spec.ts` - **24 tests**
+
 Admin dashboard and user management:
+
 - Dashboard access control (admin, listener, anonymous)
 - Statistics display
 - User CRUD (Create, Read, Update, Delete)
@@ -86,10 +94,13 @@ Admin dashboard and user management:
 - Error handling
 
 ### `admin.spec.ts` - **10 tests**
+
 Additional admin tests (legacy, see admin-full.spec.ts for full coverage)
 
 ### `streaming.spec.ts` - **12 tests**
+
 AzuraCast streaming functionality:
+
 - Now Playing page
 - Stream Dashboard
 - Stream Now Playing module
@@ -100,7 +111,9 @@ AzuraCast streaming functionality:
 - Error handling
 
 ### `content.spec.ts` - **12 tests**
+
 Content management:
+
 - Blog, News, Events pages
 - Content creation (admin)
 - Permission validation
@@ -108,15 +121,19 @@ Content management:
 - Error handling
 
 ### `auth.spec.ts` - **13 tests**
+
 Authentication flows:
+
 - Login (valid/invalid)
 - Register (new user, duplicate, weak password)
 - Logout
 - Session management
 - Token persistence
 
-### `api-errors.spec.ts` - **15 tests`
+### `api-errors.spec.ts` - \*\*15 tests`
+
 API error handling:
+
 - HTTP errors (400, 401, 403, 404, 500)
 - Validation errors
 - Duplicate entries
@@ -126,44 +143,52 @@ API error handling:
 
 ## Test Summary
 
-| File | Tests | Coverage |
-|------|-------|----------|
-| `public.spec.ts` | 35 | All public pages |
-| `user.spec.ts` | 14 | User features |
-| `admin-full.spec.ts` | 24 | Admin dashboard |
-| `streaming.spec.ts` | 12 | AzuraCast/Streaming |
-| `content.spec.ts` | 12 | Blog/News/Events |
-| `auth.spec.ts` | 13 | Authentication |
-| `api-errors.spec.ts` | 15 | Error handling |
-| **TOTAL** | **125** | **Comprehensive** |
+| File                 | Tests   | Coverage            |
+| -------------------- | ------- | ------------------- |
+| `public.spec.ts`     | 35      | All public pages    |
+| `user.spec.ts`       | 14      | User features       |
+| `admin-full.spec.ts` | 24      | Admin dashboard     |
+| `streaming.spec.ts`  | 12      | AzuraCast/Streaming |
+| `content.spec.ts`    | 12      | Blog/News/Events    |
+| `auth.spec.ts`       | 13      | Authentication      |
+| `api-errors.spec.ts` | 15      | Error handling      |
+| **TOTAL**            | **125** | **Comprehensive**   |
 
 ## Key Concepts
 
 ### Test Data
+
 Tests use dynamic test data with timestamps to avoid conflicts:
+
 ```typescript
 const newUser = {
-  email: `e2etest-${Date.now()}@test.com`,
-  password: 'NewUser@12345',
+    email: `e2etest-${Date.now()}@test.com`,
+    password: "NewUser@12345",
 };
 ```
 
 ### Authentication
+
 Tests authenticate via API and store tokens in localStorage:
+
 ```typescript
 const token = await loginUser(page, email, password);
 await assertLoggedIn(page);
 ```
 
 ### Error Handling
+
 All API calls check response status and throw on failure:
+
 ```typescript
 expect(response.ok()).toBeTruthy();
 const data = await response.json();
 ```
 
 ### Cleanup
+
 Tests clean up created data (users, blog posts) after execution:
+
 ```typescript
 // Create
 const user = await createUser(page, ...);
@@ -174,6 +199,7 @@ await deleteUser(page, user.id);
 ## Configuration
 
 `playwright.config.ts`:
+
 - **baseURL**: `https://radio-azura.orioncaribe.com`
 - **Workers**: 1 (sequential - maintains auth state between tests)
 - **Retries**: 2 in CI, 0 locally
@@ -191,6 +217,7 @@ npx playwright show-report
 ```
 
 Results are stored in:
+
 - `playwright-report/` - HTML report
 - `test-results/` - JSON and JUnit XML for CI/CD
 - `playwright/.auth/` - Auth state cache
@@ -198,17 +225,21 @@ Results are stored in:
 ## Debugging
 
 ### View browser during test
+
 ```bash
 npx playwright test --headed --debug
 ```
 
 ### Use Playwright Inspector
+
 ```bash
 npx playwright test --debug
 ```
 
 ### Generate trace for failed test
+
 Traces are automatically captured on first retry. View with:
+
 ```bash
 npx playwright show-trace path/to/trace.zip
 ```
@@ -216,6 +247,7 @@ npx playwright show-trace path/to/trace.zip
 ## CI/CD Integration
 
 Tests run in CI with:
+
 - Single worker (sequential)
 - 2 retries per test
 - All reporters enabled
