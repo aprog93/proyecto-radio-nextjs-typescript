@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # Frontend React App (development)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: radio-comunitaria-frontend:latest
+    container_name: radio-comunitaria-frontend
+    environment:
+      # Backend API URL - when running standalone, point to localhost:3005
+      VITE_BACKEND_URL: ${VITE_BACKEND_URL:-http://localhost:3005}
+      
+      # Supabase
+      VITE_SUPABASE_PROJECT_ID: igvaprapbuikmorscrbj
+      VITE_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlndmFwcmFwYnVpa21vcnNjcmJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MzM4MjksImV4cCI6MjA4NzEwOTgyOX0.i2VS7sM2eWc2FjbPBBoDh91EUePt5FAEkgppe_Timns
+      VITE_SUPABASE_URL: https://igvaprapbuikmorscrbj.supabase.co
+    ports:
+      - "${FRONTEND_PORT:-3006}:80"
+    volumes:
+      - ./dist:/usr/share/nginx/html
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+      - radio-comunitaria-frontend-network
+    restart: unless-stopped
+
+networks:
+  radio-comunitaria-frontend-network:
+    driver: bridge
