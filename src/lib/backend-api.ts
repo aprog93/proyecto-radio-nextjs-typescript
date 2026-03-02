@@ -3,7 +3,8 @@
  * Replaces direct AzuraCast calls with backend proxy
  */
 
-const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+// Use relative URL for Docker (nginx proxy), fallback to localhost:3005 for dev
+const API_BASE = import.meta.env.VITE_BACKEND_URL || '';
 
 export interface ApiResponse<T> {
   success: boolean;

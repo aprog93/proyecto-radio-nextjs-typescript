@@ -1,37 +1,45 @@
-# Stage 1: Build
-FROM node:20-alpine AS builder
+# =============================================================================
+# Community Stream Connect - Frontend Dockerfile
+# Base: node:20-slim (build) + nginx:alpine (serve)
+# =============================================================================
+
+# ---- Stage 1: Build ----
+FROM node:20-slim AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml* ./
+# Instalar pnpm
+RUN npm install -g pnpm
 
-# Install dependencies
-RUN npm install -g pnpm && pnpm install --frozen-lockfile
+# Copiar archivos de lock
+COPY package.json pnpm-lock.yaml ./
 
-# Copy source
+# Instalar dependencias
+RUN pnpm install --frozen-lockfile
+
+# Copiar código fuente
 COPY . .
 
-# Build the application
+# Build de la aplicación
 RUN pnpm run build
 
-# Stage 2: Serve with nginx
+# ---- Stage 2: Serve with nginx ----
 FROM nginx:alpine
 
-# Install envsubst for environment variable substitution
+# Instalar bash y envsubst (necesario para sustitución de variables)
 RUN apk add --no-cache bash openssl
 
-# Copy custom nginx config template
-COPY nginx.conf /etc/nginx/conf.d/default.conf.template
+# Copiar configuración de nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy entrypoint script
+# Copiar script de entrada
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-# Copy built files from builder
+# Copiar archivos buildados
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Expose port
+# Exponer puerto
 EXPOSE 80
 
 # Health check

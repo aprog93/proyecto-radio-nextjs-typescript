@@ -6,8 +6,8 @@ export const API_BASE = import.meta.env.VITE_AZURACAST_BASE_URL || "https://demo
 export const STATION_ID = import.meta.env.VITE_AZURACAST_STATION_ID || "1";
 export const POLLING_INTERVAL = Number(import.meta.env.VITE_AZURACAST_POLLING_INTERVAL) || 15000;
 
-// Backend API base (BFF)
-const BACKEND_BASE = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+// Backend API base (BFF) - use relative URL for Docker
+const BACKEND_BASE = import.meta.env.VITE_BACKEND_URL || "";
 
 // --- Types matching AzuraCast /api/nowplaying/{station_id} response ---
 
